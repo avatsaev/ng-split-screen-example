@@ -1,26 +1,50 @@
-<as-split *ngIf="config"
-          direction="horizontal">
+<ng-template
+  [ngTemplateOutlet]="splitViewTplRef"
+  [ngTemplateOutletContext]="{ node: rootNode, order: 0 }"
+></ng-template>
+
+<ng-template #splitViewTplRef let-node="node" let-order="order">
+
+  <as-split
+    [direction]="node.splitDirection"
+  >
+
+    <!-- GO DEEPER -->
+    <ng-template
+      *ngIf="node.children; else splitContent"
+      ngFor
+      [ngForOf]="node.children"
+      [ngForTrackBy]="nodeTrackByFn"
+      let-child
+      let-i="index"
+    >
+
+      <as-split-area>
+        <ng-template
+          [ngTemplateOutlet]="splitViewTplRef"
+          [ngTemplateOutletContext]="{ node: child, order: i }"
+        ></ng-template>
+      </as-split-area>
 
 
-  <ng-template ngFor let-column [ngForOf]="config.columns" let-icol="index">
+    </ng-template>
 
-    <as-split-area *ngIf="column.visible"
-                   [order]="icol"
-                   [size]="column.size">
-      <as-split direction="vertical">
-        <ng-template ngFor let-row [ngForOf]="column.rows" let-irow="index">
-          <as-split-area *ngIf="row.visible"
-                         [order]="irow"
-                         [size]="row.size">
 
-              <div class="toolbar"> <button>CompA</button> <button> CompB</button></div>
-              <div  class="panel">
+    <!-- END OF RECURSION SHOW CONTENT-->
+    <ng-template #splitContent>
+      <as-split-area
+        [size]="node.size"
+        [order]="order"
+      >
 
-              </div>
+        <div  >
+          {{node.widgetType}}
+        </div>
 
-          </as-split-area>
-        </ng-template>
-      </as-split>
-    </as-split-area>
-  </ng-template>
-</as-split>
+      </as-split-area>
+
+    </ng-template>
+
+  </as-split>
+
+</ng-template>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-comp-a',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./comp-a.component.css']
 })
 export class CompAComponent implements OnInit {
+
+  @Input() username;
 
   constructor() { }
 

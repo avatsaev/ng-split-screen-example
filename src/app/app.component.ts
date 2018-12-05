@@ -1,16 +1,19 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {CdkPortalOutlet, ComponentPortal} from '@angular/cdk/portal';
+import {CompAComponent} from './comp-a/comp-a.component';
+import * as uuid from 'uuid/v4';
 
-interface IConfig {
-  columns: Array<{
-    visible: boolean,
-    size: number,
-    rows: Array<{
-      visible: boolean,
-      size?: number,
-      type: string
-    }>
-  }>;
-  disabled: boolean;
+
+export interface SplitViewNode {
+  id: string;
+  title?: string;
+  splitDirection?: 'vertical' | 'horizontal';
+  children?: SplitViewNode[];
+  parentId?: string;
+  widgetType?: string;
+  inputs?: Object;
+  size?: number;
+  visible?: boolean;
 }
 
 
@@ -20,25 +23,64 @@ interface IConfig {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
-  config: IConfig = {
-    columns: [
+export class AppComponent implements OnInit, AfterViewInit {
+
+  @ViewChild('portalHost') portalHost: CdkPortalOutlet;
+  // widgetComponentPortal: ComponentPortal;
+
+  rootNode: SplitViewNode = {
+    id: uuid(),
+    splitDirection: 'vertical',
+    children: [
       {
-        visible: true,
-        size: 100,
-        rows: [
-          { visible: true, size: 50, type: 'A' },
-          { visible: true, size: 50, type: 'B' }
+        id: uuid(),
+        size: 50,
+        widgetType: 'COMP_A',
+        inputs: {
+          username: 'avatsaev'
+        }
+      },
+      {
+        id: uuid(),
+        size: 50,
+        widgetType: 'COMP_B',
+        inputs: {
+          buttonTitle: 'CLICK!'
+        }
+      },
+      {
+        id: uuid(),
+        splitDirection: 'horizontal',
+        children: [
+          {
+            id: uuid(),
+            size: 50,
+            widgetType: 'A'
+          },
+          {
+            id: uuid(),
+            size: 50,
+            widgetType: 'C'
+          }
         ]
       }
-    ],
-    disabled: false
+    ]
   };
 
-  ngOnInit() {
+  nodeTrackByFn = (i, e) => e.id;
 
+  ngOnInit() {
+    // this.widgetComponentPortal = new ComponentPortal(CompAComponent);
+    // this.widgetComponentPortal.component.username = 'avatsaev';
   }
 
+  ngAfterViewInit(): void {
+    console.log(this.portalHost);
+
+    // this.widgetComponentPortal = new ComponentPortal(CompAComponent);
+    // this.portalHost.attachComponentPortal(this.widgetComponentPortal)
+
+  }
 
 
 }
