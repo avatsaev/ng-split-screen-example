@@ -7,7 +7,7 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class CompAComponent implements OnInit {
 
-  @Input() username;
+  @Input() username = '';
 
   constructor() { }
 

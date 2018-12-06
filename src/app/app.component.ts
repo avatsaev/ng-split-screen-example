@@ -1,32 +1,22 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {CdkPortalOutlet, ComponentPortal} from '@angular/cdk/portal';
+import {AfterViewInit, ChangeDetectionStrategy, Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {CompAComponent} from './comp-a/comp-a.component';
 import * as uuid from 'uuid/v4';
-
-
-export interface SplitViewNode {
-  id: string;
-  title?: string;
-  splitDirection?: 'vertical' | 'horizontal';
-  children?: SplitViewNode[];
-  parentId?: string;
-  widgetType?: string;
-  inputs?: Object;
-  size?: number;
-  visible?: boolean;
-}
-
+import {NodeContainerComponent} from './node-container/node-container.component';
+import {CompBComponent} from './comp-b/comp-b.component';
+import {attachCompToHostAndInit} from './helpers/split.helpers';
+import {SplitViewNode} from './models/split-view-node';
 
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('portalHost') portalHost: CdkPortalOutlet;
-  // widgetComponentPortal: ComponentPortal;
+  @ViewChildren('nodeContainer') splitViewContainers: QueryList<NodeContainerComponent>;
+
 
   rootNode: SplitViewNode = {
     id: uuid(),
@@ -55,12 +45,15 @@ export class AppComponent implements OnInit, AfterViewInit {
           {
             id: uuid(),
             size: 50,
-            widgetType: 'A'
+            widgetType: 'COMP_A',
+            inputs: {
+              username: 'angular'
+            }
           },
           {
             id: uuid(),
             size: 50,
-            widgetType: 'C'
+            widgetType: 'COMP_B'
           }
         ]
       }
@@ -75,10 +68,26 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    console.log(this.portalHost);
+    this.splitViewContainers.forEach( c => this.injectComponent(c));
+  }
 
-    // this.widgetComponentPortal = new ComponentPortal(CompAComponent);
-    // this.portalHost.attachComponentPortal(this.widgetComponentPortal)
+
+  injectComponent(host: NodeContainerComponent) {
+
+    switch (host.splitViewNode.widgetType) {
+      case 'COMP_A': {
+
+        const compRef = attachCompToHostAndInit(host, CompAComponent);
+        break;
+      }
+      case 'COMP_B': {
+        const compRef = attachCompToHostAndInit(host, CompBComponent);
+        break;
+      }
+    }
+  }
+
+  buttonClicked(e: string) {
 
   }
 

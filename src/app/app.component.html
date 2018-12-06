@@ -37,9 +37,10 @@
         [order]="order"
       >
 
-        <div  >
-          {{node.widgetType}}
-        </div>
+        <app-node-container
+          #nodeContainer
+          [splitViewNode]="node"
+        ></app-node-container>
 
       </as-split-area>
 
