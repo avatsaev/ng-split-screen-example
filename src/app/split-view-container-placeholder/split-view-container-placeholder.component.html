@@ -1,0 +1,11 @@
+<button (click)="split.emit({direction: 'vertical', nodeId: splitViewNode.id})">V-SPLIT</button>
+<button (click)="split.emit({direction: 'horizontal', nodeId: splitViewNode.id})">H-SPLIT</button>
+<select class="widget-picker" (change)="widgetSelected.emit({widgetType: $event.target.value, nodeId: splitViewNode.id})">
+  <option value="" disabled selected>Select a widget</option>
+  <option
+    *ngFor="let w of widgetList"
+    [value]="w.type"
+  >
+    {{w.title}}
+  </option>
+</select>

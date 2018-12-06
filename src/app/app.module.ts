@@ -2,17 +2,21 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { AngularSplitModule } from 'angular-split';
-import { CompAComponent } from './comp-a/comp-a.component';
-import { CompBComponent } from './comp-b/comp-b.component';
 import {PortalModule} from '@angular/cdk/portal';
-import { NodeContainerComponent } from './node-container/node-container.component';
+import { SplitViewContainerComponent } from './split-view-container/split-view-container.component';
+import { SplitViewContainerPlaceholderComponent } from './split-view-container-placeholder/split-view-container-placeholder.component';
+import { SplitDashboardComponent } from './split-dashboard/split-dashboard.component';
+import {CompAComponent} from './widgets/comp-a/comp-a.component';
+import {CompBComponent} from './widgets/comp-b/comp-b.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CompAComponent,
     CompBComponent,
-    NodeContainerComponent
+    SplitViewContainerComponent,
+    SplitViewContainerPlaceholderComponent,
+    SplitDashboardComponent
   ],
   imports: [
     AngularSplitModule,

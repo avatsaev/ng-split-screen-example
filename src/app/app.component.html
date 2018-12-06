@@ -1,51 +1,5 @@
-<ng-template
-  [ngTemplateOutlet]="splitViewTplRef"
-  [ngTemplateOutletContext]="{ node: rootNode, order: 0 }"
-></ng-template>
-
-<ng-template #splitViewTplRef let-node="node" let-order="order">
-
-  <as-split
-    [direction]="node.splitDirection"
-  >
-
-    <!-- GO DEEPER -->
-    <ng-template
-      *ngIf="node.children; else splitContent"
-      ngFor
-      [ngForOf]="node.children"
-      [ngForTrackBy]="nodeTrackByFn"
-      let-child
-      let-i="index"
-    >
-
-      <as-split-area>
-        <ng-template
-          [ngTemplateOutlet]="splitViewTplRef"
-          [ngTemplateOutletContext]="{ node: child, order: i }"
-        ></ng-template>
-      </as-split-area>
-
-
-    </ng-template>
-
-
-    <!-- END OF RECURSION SHOW CONTENT-->
-    <ng-template #splitContent>
-      <as-split-area
-        [size]="node.size"
-        [order]="order"
-      >
-
-        <app-node-container
-          #nodeContainer
-          [splitViewNode]="node"
-        ></app-node-container>
-
-      </as-split-area>
-
-    </ng-template>
-
-  </as-split>
-
-</ng-template>
+<app-split-dashboard
+  #splitDashboard
+  [widgetList]="widgetList"
+  (widgetInjectionRequest)="onWidgetInjectionRequest($event)"
+></app-split-dashboard>

@@ -1,9 +1,9 @@
 
 import {Subscription} from 'rxjs';
-import {ChangeDetectorRef, ComponentRef, Type} from '@angular/core';
+import {Type} from '@angular/core';
 import {SplitViewNode} from '../models/split-view-node';
-import {NodeContainerComponent} from '../node-container/node-container.component';
-import {ComponentPortal} from '@angular/cdk/portal';
+
+
 
 export const findNode = (rootNode: SplitViewNode, nodeId: string): SplitViewNode => {
 
@@ -28,6 +28,13 @@ export const findNode = (rootNode: SplitViewNode, nodeId: string): SplitViewNode
 };
 
 
+export const uuid = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    // tslint:disable-next-line
+    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
 
 export const getWidgetNodeIds = (rootNode: SplitViewNode): string[] => {
   if (rootNode.widgetType && !rootNode.children) {
@@ -75,22 +82,22 @@ export const hookComponentOutputs = (component: Type<any>, outputHandlers?: {[k:
   return subs;
 };
 
-export const attachCompToHostAndInit = (host: NodeContainerComponent, comp: Type<any>): ComponentRef<any> => {
-  const compRef = host.portalHost.attachComponentPortal(
-    new ComponentPortal(comp)
-  );
-
-  if (host.splitViewNode.inputs) {
-    initComponentInputs(compRef.instance, host.splitViewNode.inputs);
-  }
-
-  if (host.splitViewNode.outputHandlers) {
-    hookComponentOutputs(compRef.instance, host.splitViewNode.outputHandlers);
-  }
-
-  const compCdr = compRef.injector.get(ChangeDetectorRef);
-  compCdr.detectChanges();
-  return compRef;
-};
-
-
+// export const attachCompToHostAndInit = (host: SplitViewContainerComponent, comp: Type<any>): ComponentRef<any> => {
+//   const compRef = host.portalHost.attachComponentPortal(
+//     new ComponentPortal(comp)
+//   );
+//
+//   if (host.splitViewNode.inputs) {
+//     initComponentInputs(compRef.instance, host.splitViewNode.inputs);
+//   }
+//
+//   if (host.splitViewNode.outputHandlers) {
+//     hookComponentOutputs(compRef.instance, host.splitViewNode.outputHandlers);
+//   }
+//
+//   const compCdr = compRef.injector.get(ChangeDetectorRef);
+//   compCdr.detectChanges();
+//   return compRef;
+// };
+//
+//

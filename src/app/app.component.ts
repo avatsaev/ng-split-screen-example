@@ -1,11 +1,8 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, OnInit, QueryList, ViewChildren} from '@angular/core';
-import {CompAComponent} from './comp-a/comp-a.component';
-import * as uuid from 'uuid/v4';
-import {NodeContainerComponent} from './node-container/node-container.component';
-import {CompBComponent} from './comp-b/comp-b.component';
-import {attachCompToHostAndInit} from './helpers/split.helpers';
-import {SplitViewNode} from './models/split-view-node';
-
+import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
+import {SplitDashboardComponent} from './split-dashboard/split-dashboard.component';
+import {SplitViewComponentPlaceholder} from './models/split-view-component-placeholder';
+import {CompAComponent} from './widgets/comp-a/comp-a.component';
+import {CompBComponent} from './widgets/comp-b/comp-b.component';
 
 @Component({
   selector: 'app-root',
@@ -13,83 +10,56 @@ import {SplitViewNode} from './models/split-view-node';
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent {
 
-  @ViewChildren('nodeContainer') splitViewContainers: QueryList<NodeContainerComponent>;
+  @ViewChild('splitDashboard') splitDashboard: SplitDashboardComponent;
 
-
-  rootNode: SplitViewNode = {
-    id: uuid(),
-    splitDirection: 'vertical',
-    children: [
-      {
-        id: uuid(),
-        size: 50,
-        widgetType: 'COMP_A',
-        inputs: {
-          username: 'avatsaev'
-        }
-      },
-      {
-        id: uuid(),
-        size: 50,
-        widgetType: 'COMP_B',
-        inputs: {
-          buttonTitle: 'CLICK!'
-        }
-      },
-      {
-        id: uuid(),
-        splitDirection: 'horizontal',
-        children: [
-          {
-            id: uuid(),
-            size: 50,
-            widgetType: 'COMP_A',
-            inputs: {
-              username: 'angular'
-            }
-          },
-          {
-            id: uuid(),
-            size: 50,
-            widgetType: 'COMP_B'
-          }
-        ]
-      }
-    ]
-  };
-
-  nodeTrackByFn = (i, e) => e.id;
-
-  ngOnInit() {
-    // this.widgetComponentPortal = new ComponentPortal(CompAComponent);
-    // this.widgetComponentPortal.component.username = 'avatsaev';
-  }
-
-  ngAfterViewInit(): void {
-    this.splitViewContainers.forEach( c => this.injectComponent(c));
-  }
+  widgetList: Array<{type: string, title: string}> = [
+    {
+      type: 'COMP_A',
+      title: 'COMP A'
+    },
+    {
+      type: 'COMP_B',
+      title: 'COMP B'
+    }
+  ];
 
 
-  injectComponent(host: NodeContainerComponent) {
 
-    switch (host.splitViewNode.widgetType) {
+  onWidgetInjectionRequest({widgetType, nodeId, inputs}: {widgetType: string, nodeId: string, inputs?: any}) {
+
+    let componentPlaceholder;
+
+    switch (widgetType) {
+
       case 'COMP_A': {
-
-        const compRef = attachCompToHostAndInit(host, CompAComponent);
+        componentPlaceholder = new SplitViewComponentPlaceholder<CompAComponent>(
+          CompAComponent, {
+            widgetType,
+            inputs: inputs ? inputs : {
+              username: 'avatsaev'
+            }
+          }
+        );
         break;
       }
+
       case 'COMP_B': {
-        const compRef = attachCompToHostAndInit(host, CompBComponent);
+        componentPlaceholder = new SplitViewComponentPlaceholder<CompBComponent>(
+          CompBComponent, {
+            widgetType,
+            inputs:  inputs ? inputs : {
+              buttonTitle: 'CLICK!'
+            }
+          }
+        );
         break;
       }
     }
+
+    const componentRef = this.splitDashboard.injectWidget(componentPlaceholder, nodeId);
+    console.log(componentRef);
   }
-
-  buttonClicked(e: string) {
-
-  }
-
 
 }

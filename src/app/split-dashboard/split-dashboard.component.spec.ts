@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NodeContainerComponent } from './node-container.component';
+import { SplitDashboardComponent } from './split-dashboard.component';
 
-describe('NodeContainerComponent', () => {
-  let component: NodeContainerComponent;
-  let fixture: ComponentFixture<NodeContainerComponent>;
+describe('SplitDashboardComponent', () => {
+  let component: SplitDashboardComponent;
+  let fixture: ComponentFixture<SplitDashboardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NodeContainerComponent ]
+      declarations: [ SplitDashboardComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NodeContainerComponent);
+    fixture = TestBed.createComponent(SplitDashboardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
