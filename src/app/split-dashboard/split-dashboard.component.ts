@@ -19,7 +19,7 @@ import {SplitViewComponentPlaceholder} from '../models/split-view-component-plac
   selector: 'app-split-dashboard',
   templateUrl: './split-dashboard.component.html',
   styleUrls: ['./split-dashboard.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SplitDashboardComponent implements OnInit, OnChanges {
 
@@ -42,15 +42,14 @@ export class SplitDashboardComponent implements OnInit, OnChanges {
   nodeTrackByFn = (i, e) => e.id;
 
 
-  constructor(private compFactoryResolver: ComponentFactoryResolver) {
-
-  }
-
+  constructor(
+    private compFactoryResolver: ComponentFactoryResolver,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
 
   }
-
 
   ngOnChanges(changes: SimpleChanges) {
 
@@ -70,12 +69,12 @@ export class SplitDashboardComponent implements OnInit, OnChanges {
     }
   }
 
-
   onSplit({direction, nodeId}) {
 
     const node = findNode(this.rootNode, nodeId);
-    console.log(node);
+
     node.splitDirection = direction;
+
     node.children = [
       {
         id: uuid(),
@@ -92,6 +91,17 @@ export class SplitDashboardComponent implements OnInit, OnChanges {
 
   }
 
+  onClose(nodeId: string) {
+    const node = findNode(this.rootNode, nodeId);
+    const parentNode = findNode(this.rootNode, node.parentId);
+    parentNode.children = parentNode.children.filter(n => n.id !== nodeId);
+    if (parentNode.children.length === 0) {
+      parentNode.children = undefined;
+    }
+    this.splitChanges.emit(this.rootNode);
+
+  }
+
   onWidgetSelected({widgetType, nodeId}: {widgetType: string, nodeId: string}) {
     this.widgetInjectionRequest.emit({widgetType, nodeId});
   }
@@ -100,6 +110,7 @@ export class SplitDashboardComponent implements OnInit, OnChanges {
     const node = findNode(this.rootNode, nodeId);
     node.widgetType = widgetDef.params.widgetType;
     node.inputs = widgetDef.params.inputs;
+    this.cdr.detectChanges();
 
     const splitViewChildRef = this.splitViewContainers.find( c => c.splitViewNode.id === nodeId);
 

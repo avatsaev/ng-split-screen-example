@@ -8,6 +8,7 @@ import { SplitViewContainerPlaceholderComponent } from './split-view-container-p
 import { SplitDashboardComponent } from './split-dashboard/split-dashboard.component';
 import {CompAComponent} from './widgets/comp-a/comp-a.component';
 import {CompBComponent} from './widgets/comp-b/comp-b.component';
+import { SplitViewToolbarComponent } from './split-view-toolbar/split-view-toolbar.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import {CompBComponent} from './widgets/comp-b/comp-b.component';
     CompBComponent,
     SplitViewContainerComponent,
     SplitViewContainerPlaceholderComponent,
-    SplitDashboardComponent
+    SplitDashboardComponent,
+    SplitViewToolbarComponent
   ],
   imports: [
     AngularSplitModule,

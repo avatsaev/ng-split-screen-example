@@ -1,5 +1,6 @@
 <app-split-dashboard
   #splitDashboard
+  [rootNode]="initialSplitView"
   [widgetList]="widgetList"
   (widgetInjectionRequest)="onWidgetInjectionRequest($event)"
 ></app-split-dashboard>

@@ -37,12 +37,20 @@
         [size]="node.size"
         [order]="order"
       >
+        <div *ngIf="node.widgetType" class="split-view-container"  >
 
-        <app-split-view-container
-          #nodeContainer
-          [splitViewNode]="node"
-        ></app-split-view-container>
+          <app-split-view-toolbar
+            [splitViewNode]="node"
+            (close)="onClose($event)"
+            (split)="onSplit($event)"
+          ></app-split-view-toolbar>
 
+          <app-split-view-container
+            #nodeContainer
+            [splitViewNode]="node"
+          ></app-split-view-container>
+
+        </div>
 
 
         <app-split-view-container-placeholder
